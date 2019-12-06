@@ -17,6 +17,9 @@ public class TakeAwayBillImpl implements TakeAwayBill{
   if (itemsOrdered.size() == 0) {
    return 0.0;
   }
+  else if(itemsOrdered.size() >= 31) {
+   throw new RestaurantBillException(true);
+  }
   else if (count >= 5) {
    double min = itemsOrdered.stream().filter(x->x.getType()==itemType.Panini).mapToDouble(x->x.getPrice()).min().orElseThrow(NoSuchElementException::new);
    boolean visited=false;

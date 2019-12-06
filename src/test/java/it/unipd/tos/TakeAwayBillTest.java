@@ -53,6 +53,7 @@ public class TakeAwayBillTest {
   sum = bill.getOrderPrice(order);
   assertEquals(expectedSum,sum,0.D);
  }
+ 
  @Test
  public void testNoScontoMetàPrezzoSuPaninoMenoCaroConMenuDi5Panini() throws RestaurantBillException{
   List<MenuItem> order=Arrays.asList(new MenuItemImpl(itemType.Fritti,"frittura di pesce",6.D),
@@ -145,5 +146,14 @@ public class TakeAwayBillTest {
   expectedSum = 79.5D;
   sum = bill.getOrderPrice(order);
   assertEquals(expectedSum,sum,0.D);
+ }
+ 
+ @Test (expected = RestaurantBillException.class)
+ public void testPiùDi30ElementiOrdinati_ThrowsException() throws RestaurantBillException{
+  List<MenuItem> order=new LinkedList<>();
+  for(int i=0; i<31; i++) {
+   order.add(new MenuItemImpl(itemType.Bevande,"prosecco",10.5D));
+  }
+  sum = bill.getOrderPrice(order);
  }
 }
