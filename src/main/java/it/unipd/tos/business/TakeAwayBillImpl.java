@@ -4,18 +4,35 @@
 package it.unipd.tos.business;
 
 import java.util.List;
-
+import java.util.NoSuchElementException;
 import it.unipd.tos.model.MenuItem;
-
+import it.unipd.tos.model.itemType;
 import it.unipd.tos.business.exception.RestaurantBillException;
 
 public class TakeAwayBillImpl implements TakeAwayBill{
  @Override
  public double getOrderPrice(List<MenuItem> itemsOrdered) throws RestaurantBillException{
+  double sum=0.D;
+  long count=itemsOrdered.stream().filter(x->x.getType()==itemType.Panini).count();
   if (itemsOrdered.size() == 0) {
    return 0.0;
   }
-  double sum = itemsOrdered.stream().mapToDouble(e->e.getPrice()).sum();
+  else if (count >= 5) {
+   double min = itemsOrdered.stream().filter(x->x.getType()==itemType.Panini).mapToDouble(x->x.getPrice()).min().orElseThrow(NoSuchElementException::new);
+   boolean visited=false;
+   for(MenuItem e: itemsOrdered) {
+    if(e.getPrice() == min && !visited && e.getType()==itemType.Panini) {
+     sum=sum+min/2.D;
+     visited=true;
+    }
+    else {
+     sum=sum+e.getPrice();
+    }
+   }
+  }
+  else {
+   sum = itemsOrdered.stream().mapToDouble(e->e.getPrice()).sum();
+  }
   return sum;
  }
 }

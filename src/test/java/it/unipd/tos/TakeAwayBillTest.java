@@ -20,19 +20,59 @@ public class TakeAwayBillTest {
  double sum=0;
  @Test
  public void testItemsPricesSum() throws RestaurantBillException {
-  List<MenuItem> order=Arrays.asList(new MenuItemImpl(itemType.Bevande,"coca cola",2.50),
-  new MenuItemImpl(itemType.Panini,"panino al formaggio",3.0),
-  new MenuItemImpl(itemType.Fritti,"frittura di pesce",6.0));
-  expectedSum = 11.50;
+  List<MenuItem> order=Arrays.asList(new MenuItemImpl(itemType.Bevande,"coca cola",2.5D),
+   new MenuItemImpl(itemType.Panini,"panino al formaggio",3.D),
+   new MenuItemImpl(itemType.Fritti,"frittura di pesce",6.D));
+  expectedSum = 11.5D;
   sum = bill.getOrderPrice(order);
-  assertEquals(expectedSum,sum,0);
+  assertEquals(expectedSum,sum,0.D);
  }
 	
  @Test
  public void testZeroItemsPricesSum() throws RestaurantBillException {
   List<MenuItem> order=Arrays.asList();
-  expectedSum = 0.00;
+  expectedSum = 0.D;
   sum = bill.getOrderPrice(order);
-  assertEquals(expectedSum,sum,0);
+  assertEquals(expectedSum,sum,0.D);
+ }
+
+ @Test
+ public void testNoScontoMetàPrezzoSuPaninoMenoCaroConMenuDi5Panini() throws RestaurantBillException{
+  List<MenuItem> order=Arrays.asList(new MenuItemImpl(itemType.Fritti,"frittura di pesce",6.D),
+   new MenuItemImpl(itemType.Panini, "panino e bresaola",4.D),
+   new MenuItemImpl(itemType.Panini, "panino e porchetta",5.D),
+   new MenuItemImpl(itemType.Panini, "panino e porchetta",5.D),
+   new MenuItemImpl(itemType.Bevande, "pepsi 0.25L", 3.D));
+  expectedSum = 23D;
+  sum = bill.getOrderPrice(order);
+  assertEquals(expectedSum,sum,0.D);
+ }
+ 
+ @Test
+ public void testScontoMetàPrezzoSuPaninoGratis() throws RestaurantBillException{
+  List<MenuItem> order=Arrays.asList(new MenuItemImpl(itemType.Fritti,"frittura di pesce",6.D),
+   new MenuItemImpl(itemType.Panini, "panino e salame",0.D),
+   new MenuItemImpl(itemType.Panini, "panino e porchetta",4.D),
+   new MenuItemImpl(itemType.Panini, "panino e porchetta",5.D),
+   new MenuItemImpl(itemType.Panini, "panino e porchetta",5.D),
+   new MenuItemImpl(itemType.Panini, "panino e porchetta",5.D),
+   new MenuItemImpl(itemType.Bevande, "pepsi 0.25L", 3.D));
+  expectedSum = 28D;
+  sum = bill.getOrderPrice(order);
+  assertEquals(expectedSum,sum,0.D);
+ }
+ 
+ @Test
+ public void testScontoMetàPrezzoSuPaninoConCostoMinimoConPiùPrezziMinimi() throws RestaurantBillException{
+  List<MenuItem> order=Arrays.asList(new MenuItemImpl(itemType.Fritti,"frittura di pesce",6.D),
+   new MenuItemImpl(itemType.Panini, "panino e salame",4.D),
+   new MenuItemImpl(itemType.Panini, "panino e porchetta",4.D),
+   new MenuItemImpl(itemType.Panini, "panino e porchetta",4.D),
+   new MenuItemImpl(itemType.Panini, "panino e salame",5.D),
+   new MenuItemImpl(itemType.Panini, "panino e prosciutto",6.D),
+   new MenuItemImpl(itemType.Bevande, "pepsi 0.25L", 3.D));
+  expectedSum = 30D;
+  sum = bill.getOrderPrice(order);
+  assertEquals(expectedSum,sum,0.D);
  }
 }
