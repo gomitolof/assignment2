@@ -156,4 +156,26 @@ public class TakeAwayBillTest {
   }
   sum = bill.getOrderPrice(order);
  }
+ 
+ @Test
+ public void testImportoMinore10€AggiuntaCommissioneDi50Cent() throws RestaurantBillException{
+  List<MenuItem> order=new LinkedList<>();
+  order.add(new MenuItemImpl(itemType.Panini,"hamburger",5.5D));
+  expectedSum = 6D;
+  sum=bill.getOrderPrice(order);
+  assertEquals(expectedSum,sum,0.D);
+ }
+ 
+ @Test
+ public void testCommissioneDi50CentEScontoMetàPrezzoSuPanino() throws RestaurantBillException{
+  List<MenuItem> order=new LinkedList<>();
+  order.add(new MenuItemImpl(itemType.Panini,"hamburger",1D));
+  order.add(new MenuItemImpl(itemType.Panini,"hamburger bacon",2D));
+  order.add(new MenuItemImpl(itemType.Panini,"hamburger",1D));
+  order.add(new MenuItemImpl(itemType.Panini,"hamburger bacon",2D));
+  order.add(new MenuItemImpl(itemType.Panini,"hamburger",1D));
+  expectedSum = 7D;
+  sum=bill.getOrderPrice(order);
+  assertEquals(expectedSum,sum,0.D);
+ }
 }

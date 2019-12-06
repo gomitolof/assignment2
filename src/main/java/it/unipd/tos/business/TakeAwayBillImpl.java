@@ -39,6 +39,7 @@ public class TakeAwayBillImpl implements TakeAwayBill{
   if(isInOffer(itemsOrdered)) {
    sum=sum-sum*0.1D;
   }
+  sum = sum < 10D ? sum+=0.5D : sum;
   return sum;
  }
  
