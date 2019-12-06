@@ -20,19 +20,32 @@ public class TakeAwayBillImpl implements TakeAwayBill{
   else if (count >= 5) {
    double min = itemsOrdered.stream().filter(x->x.getType()==itemType.Panini).mapToDouble(x->x.getPrice()).min().orElseThrow(NoSuchElementException::new);
    boolean visited=false;
-   for(MenuItem e: itemsOrdered) {
-    if(e.getPrice() == min && !visited && e.getType()==itemType.Panini) {
+   for(MenuItem item: itemsOrdered) {
+    if(item.getPrice() == min && !visited && item.getType()==itemType.Panini) {
      sum=sum+min/2.D;
      visited=true;
     }
     else {
-     sum=sum+e.getPrice();
+     sum=sum+item.getPrice();
     }
    }
   }
   else {
    sum = itemsOrdered.stream().mapToDouble(e->e.getPrice()).sum();
   }
+  if(isInOffer(itemsOrdered)) {
+   sum=sum-sum*0.1D;
+  }
   return sum;
+ }
+ 
+ public boolean isInOffer(List<MenuItem> itemsOrdered) {
+  double sum=0.D;
+  for(MenuItem item: itemsOrdered) {
+   if(item.getType()==itemType.Panini || item.getType()==itemType.Fritti) {
+    sum+=item.getPrice();
+   }
+  }
+  return sum >= 50 ? true : false;
  }
 }
